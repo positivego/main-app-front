@@ -76,7 +76,7 @@ const { breadcrumbs } = storeToRefs(store);
 
         .link {
           text-decoration: none;
-          color: $subtext-color;
+          color: $subtext-color-active;
 
           &:hover {
             text-decoration: underline;

@@ -5,6 +5,7 @@ import type { AppState } from "../types";
 export const useAppStore = defineStore("app-store", {
   state: (): AppState => ({
     account: null,
+    roles: [],
     tokents: {
       accessToken: "",
       refreshToken: "",
@@ -32,6 +33,8 @@ export const useAppStore = defineStore("app-store", {
         this.tokents.refreshToken = refreshToken;
         this.setLocalTokens();
 
+        await this.loadAppData();
+
         // То тут кидаем на страницу статистики
       } catch (error) {
         console.debug(error);
@@ -39,6 +42,11 @@ export const useAppStore = defineStore("app-store", {
       }
 
       this.isAppLoading = false;
+    },
+
+    async loadAppData() {
+      const roles = await mainApi.roles.get();
+      this.roles = roles;
     },
 
     login() {},

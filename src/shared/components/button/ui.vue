@@ -41,12 +41,14 @@ const handleClick = (event: MouseEvent) => {
   font-size: 12px;
   cursor: pointer;
   color: #c6c6c6;
+  box-shadow: 0px 0px 3px black;
 }
 
 .buttonDefault {
   transition: 0.3s;
   &:hover {
     border: 1px solid $border-color-active;
+    box-shadow: 0px 0px 3px $border-color-active;
   }
 }
 

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ROUTES_NAMES } from "@/shared/constants/routes.constants";
-import { useRouter } from "vue-router";
+import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import type { AsaidMenuItem } from "../types";
 
 const router = useRouter();
+const route = useRoute();
 
 const menuItems: AsaidMenuItem[] = [
   {
@@ -26,6 +28,10 @@ const menuItems: AsaidMenuItem[] = [
   },
 ];
 
+const currentRouteName = computed(() => {
+  return route.name;
+});
+
 const go = (routeName: string | undefined) => {
   if (routeName?.length) return router.push({ name: routeName });
 };
@@ -35,7 +41,10 @@ const go = (routeName: string | undefined) => {
   <div :class="$style.root">
     <div :class="$style.item" v-for="(item, key) in menuItems" :key="key">
       <div v-if="item.type == 'title'" :class="$style.title">{{ item.name }}</div>
-      <div v-if="item.type == 'link'" :class="$style.link" @click="go(item.routeName)">{{ item.name }}</div>
+      <div v-if="item.type == 'link'" :class="$style.link" @click="go(item.routeName)">
+        <span>{{ item.name }}</span>
+        <div v-if="currentRouteName == item.routeName" :class="$style.dot">•</div>
+      </div>
     </div>
   </div>
 </template>
@@ -60,13 +69,25 @@ const go = (routeName: string | undefined) => {
 
     .link {
       position: relative;
+      display: flex;
       padding: 0 20px 10px 20px;
       font-size: 14px;
-      cursor: pointer;
       color: $subtext-color;
 
-      &:hover {
-        text-decoration: underline;
+      span {
+        position: relative;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      .dot {
+        position: relative;
+        cursor: default;
+        padding-left: 10px;
+        top: 1px;
       }
     }
   }
