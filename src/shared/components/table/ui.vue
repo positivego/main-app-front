@@ -38,8 +38,10 @@ const props = defineProps({
       <tbody v-if="props?.rows?.length">
         <tr v-for="(row, rowIndex) in props.rows" :key="rowIndex">
           <td v-for="column in columns" :key="column.key">
-            <slot v-if="!props.isLoading" :name="column.key" :row="row">{{ row[column.key] }}</slot>
-            <div v-else :class="$style.loading"></div>
+            <div :class="$style.item">
+              <slot v-if="!props.isLoading" :name="column.key" :row="row">{{ row[column.key] }}</slot>
+              <div v-else :class="$style.loading"></div>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -90,8 +92,16 @@ tbody tr:hover {
 
 td {
   color: #bcbcbc;
-  padding: 12px;
   border: 1px solid $border-color;
+
+  .item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 0 0 12px;
+    min-height: 60px;
+    font-size: 13px;
+  }
 }
 
 .spinnerContainer {

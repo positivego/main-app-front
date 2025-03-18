@@ -15,6 +15,7 @@ const props = defineProps({
 const spinnerStyle = computed(() => ({
   width: `${props.size}px`,
   height: `${props.size}px`,
+  border: `${props?.size < 15 ? "2px" : "4px"} solid`,
   borderColor: `${props.color} ${props.color} ${props.color} transparent`,
 }));
 </script>
@@ -26,7 +27,6 @@ const spinnerStyle = computed(() => ({
 <style module lang="scss">
 .spinner {
   display: inline-block;
-  border: 4px solid;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

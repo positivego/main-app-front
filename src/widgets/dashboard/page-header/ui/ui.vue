@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useBreadcrumbsStore } from "../model";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 
 const props = defineProps({
   title: {
@@ -9,9 +9,19 @@ const props = defineProps({
   },
 });
 
-const store = useBreadcrumbsStore();
+const route = useRoute();
 
-const { breadcrumbs } = storeToRefs(store);
+const breadcrumbs = computed(() => {
+  const matchedRoutes = route?.matched;
+  return matchedRoutes
+    ?.filter((el) => {
+      if (el.meta?.title) return el;
+    })
+    ?.map((el) => ({
+      title: el.meta.title || el.name,
+      path: el.path !== "/" ? el.path : null,
+    }));
+});
 </script>
 
 <template>

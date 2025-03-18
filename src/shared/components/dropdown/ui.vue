@@ -1,26 +1,38 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, onMounted, onUnmounted, type PropType, ref, useCssModule } from "vue";
 
-type Item = {
+export type DropdownItem = {
   id: number | string;
   label: string;
+  value?: number;
 };
 
 const props = defineProps({
   items: {
-    type: Array as PropType<Item[]>,
+    type: Array as PropType<DropdownItem[]>,
     required: true,
   },
   multiple: {
     type: Boolean,
     default: false,
   },
+  clearable: {
+    type: Boolean,
+    default: true,
+  },
+  openUp: {
+    type: Boolean,
+    default: false,
+  },
+  modelValue: {
+    type: Array as PropType<DropdownItem[]>,
+    default: [],
+  },
 });
 
 const style = useCssModule();
 
-const emit = defineEmits(["update:selected"]);
-const selectedItems = ref<Item[]>([]);
+const emit = defineEmits(["update:modelValue"]);
 const isOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
 
@@ -32,18 +44,15 @@ const toggleDropdown = (e: MouseEvent) => {
   isOpen.value = !isOpen.value;
 };
 
-const selectItem = (item: Item) => {
+const selectItem = (item: DropdownItem) => {
+  const currentItems = [...props.modelValue];
   if (props.multiple) {
-    const index = selectedItems.value.findIndex((selected) => selected.id === item.id);
-    if (index === -1) selectedItems.value.push(item);
-    else selectedItems.value.splice(index, 1);
-    emit(
-      "update:selected",
-      selectedItems.value.map((el) => el.id)
-    );
+    const index = currentItems.findIndex((selected) => selected.id === item.id);
+    if (index === -1) currentItems.push(item);
+    else currentItems.splice(index!, 1);
+    emit("update:modelValue", currentItems);
   } else {
-    selectedItems.value = [item];
-    emit("update:selected", selectedItems.value[0].id);
+    emit("update:modelValue", [item]);
     isOpen.value = false;
   }
 };
@@ -51,14 +60,13 @@ const selectItem = (item: Item) => {
 const removeItem = () => {
   if (props.multiple) {
   } else {
-    selectedItems.value = [];
-    emit("update:selected", null);
+    emit("update:modelValue", []);
     isOpen.value = false;
   }
 };
 
-const isSelected = (item: Item) => {
-  return selectedItems.value.some((selected) => selected.id === item.id);
+const isSelected = (item: DropdownItem) => {
+  return props.modelValue.find((selected) => selected.id === item.id);
 };
 
 const handleClickOutside = (event: Event) => {
@@ -80,16 +88,19 @@ onUnmounted(() => {
   <div :class="$style.dropdown" ref="dropdownRef">
     <div :class="$style.trigger" @click="toggleDropdown">
       <div :class="$style.title" v-if="!props.multiple">
-        <div :class="$style.label">{{ selectedItems[0]?.label || "Выберите..." }}</div>
-        <div :class="$style.clear" @click.self="removeItem">×</div>
+        <div :class="$style.label">{{ props?.modelValue[0]?.label || "Выберите..." }}</div>
+        <div v-if="props.clearable" :class="$style.clear" @click.self="removeItem">×</div>
       </div>
       <div :class="$style.tags" v-else>
-        <div :class="$style.title" v-if="!selectedItems?.length"><span>Выберите...</span></div>
-        <div :class="$style.tag" v-else v-for="item in selectedItems" :key="item.id">{{ item.label }}</div>
+        <div :class="$style.title" v-if="!props?.modelValue?.length"><span>Выберите...</span></div>
+        <div :class="$style.tag" v-else v-for="item in props?.modelValue" :key="item.id">{{ item.label }}</div>
       </div>
     </div>
 
-    <div v-if="isOpen" :class="$style.menu">
+    <div
+      v-if="isOpen"
+      :class="[$style.menu, { [$style.menuOpenDown]: !props.openUp }, { [$style.menuOpenUp]: props.openUp }]"
+    >
       <div
         v-for="item in items"
         :key="item.id"
@@ -177,9 +188,9 @@ onUnmounted(() => {
 
 .menu {
   position: absolute;
+  background-color: $body-color;
   display: flex;
   flex-direction: column;
-  top: 100%;
   left: 0;
   border-radius: 3px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -205,5 +216,13 @@ onUnmounted(() => {
     background: $item-active-smooth !important;
     color: white;
   }
+}
+
+.menuOpenDown {
+  top: 100% !important;
+}
+
+.menuOpenUp {
+  bottom: 100% !important;
 }
 </style>

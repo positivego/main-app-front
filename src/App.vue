@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 import { RouterView } from "vue-router";
 import { useAppStore } from "./shared/app";
+import { CIconsSprites } from "./shared/components";
 
 const appStore = useAppStore();
 const { isAppLoading } = storeToRefs(appStore);
@@ -13,6 +14,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <CIconsSprites />
   <div v-if="isAppLoading" :class="$style.spinner">Загрузка</div>
   <div v-else class="">
     <RouterView />
@@ -31,6 +33,7 @@ body {
   font-variation-settings: "wdth" 100;
   margin: 0;
   padding: 0;
+  z-index: 1;
 }
 
 .spinner {

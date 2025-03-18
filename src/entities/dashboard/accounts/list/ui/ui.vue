@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useAppStore } from "@/shared/app";
-import { CTable } from "@/shared/components";
-import { CDropdown } from "@/shared/components/dropdown";
+import { CPagination, CTable } from "@/shared/components";
+import { ROUTES_NAMES } from "@/shared/constants/routes.constants";
 import dayjs from "dayjs";
-import { computed, onMounted } from "vue";
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { useAccountsListStore } from "../model";
 
+const router = useRouter();
 const appStore = useAppStore();
 const accountsListStore = useAccountsListStore();
 
@@ -16,79 +18,8 @@ const columns = [
   { key: "createdAt", label: "Создан" },
 ];
 
-const getRoleName = computed(() => {
-  return (roleId: number): string => {
-    const role = appStore.roles.find((el) => el.id == roleId);
-    if (role) return role.name["ru"];
-    return "Не определено";
-  };
-});
-
-const test = [
-  {
-    id: 1,
-    label: "asd123123123123123123",
-  },
-  {
-    id: 2,
-    label: "123",
-  },
-  {
-    id: 3,
-    label: "ccc",
-  },
-  {
-    id: 4,
-    label: "asd123123123123123123",
-  },
-  {
-    id: 5,
-    label: "123",
-  },
-  {
-    id: 6,
-    label: "ccc",
-  },
-  {
-    id: 7,
-    label: "asd123123123123123123",
-  },
-  {
-    id: 8,
-    label: "123",
-  },
-  {
-    id: 9,
-    label: "ccc",
-  },
-  {
-    id: 10,
-    label: "asd123123123123123123",
-  },
-  {
-    id: 11,
-    label: "123",
-  },
-  {
-    id: 12,
-    label: "ccc",
-  },
-  {
-    id: 13,
-    label: "asd123123123123123123",
-  },
-  {
-    id: 14,
-    label: "123",
-  },
-  {
-    id: 15,
-    label: "ccc",
-  },
-];
-
-const handleSelection = (e: any) => {
-  console.log({ e });
+const selectAccount = (accountId: number) => {
+  return router.push({ name: ROUTES_NAMES.DASHBOARD.ACCOUNTS.EDIT, params: { id: accountId } });
 };
 
 onMounted(() => {
@@ -100,14 +31,14 @@ onMounted(() => {
   <CTable :columns="columns" :rows="accountsListStore.accounts" :is-loading="accountsListStore.isLoading">
     <template #username="{ row }">
       <div :class="$style.itemUsername">
-        <div :class="$style.username">{{ row.username }}</div>
+        <div :class="$style.username" @click="selectAccount(row.id)">{{ row.username }}</div>
         <div :class="$style.id">id: {{ row.id }}</div>
       </div>
     </template>
 
     <template #role="{ row }">
       <div :class="$style.itemRole">
-        <div :class="$style.roleName">{{ getRoleName(row.roleId) }}</div>
+        <div :class="$style.roleName">{{ appStore.getRoleName(row.roleId) }}</div>
         <div :class="[$style.status, { [$style.banned]: row.isBanned }]"></div>
       </div>
     </template>
@@ -116,7 +47,15 @@ onMounted(() => {
       {{ dayjs(row.createdAt).format("YYYY-MM-DD HH:mm:ss") }}
     </template>
   </CTable>
-  <CDropdown multiple :items="test" @update:selected="handleSelection" />
+  <CPagination
+    :page-count="accountsListStore.pagination.pageCount"
+    :current-page="accountsListStore.pagination.page"
+    :limit="accountsListStore.pagination.limit"
+    @on-prev-page="accountsListStore.onSelectPrevPage"
+    @on-next-page="accountsListStore.onSelectNextPage"
+    @on-select-page="accountsListStore.onSelectPage"
+    @on-change-limit="accountsListStore.onChangeLimit"
+  />
 </template>
 
 <style module lang="scss">

@@ -2,7 +2,7 @@ import { mainApi, type AccountsQueryParams } from "@/shared/api/main";
 import { defineStore } from "pinia";
 import type { AccountsListState, MappedAccount } from "../types";
 
-export const useAccountsListStore = defineStore("entity-users-list-store", {
+export const useAccountsListStore = defineStore("entity-accounts-list-store", {
   state: (): AccountsListState => ({
     accounts: [],
     pagination: {
@@ -50,6 +50,30 @@ export const useAccountsListStore = defineStore("entity-users-list-store", {
       }
 
       this.isLoading = false;
+    },
+
+    onSelectPrevPage() {
+      if (this.pagination.page <= 1 || this.isLoading) return;
+      const page = this.pagination.page - 1;
+      this.onSelectPage(page);
+    },
+
+    onSelectNextPage() {
+      if (this.pagination.page >= this.pagination.pageCount || this.isLoading) return;
+      const page = this.pagination.page + 1;
+      this.onSelectPage(page);
+    },
+
+    onSelectPage(page: number) {
+      if (this.pagination.page === page || this.isLoading) return;
+      this.pagination.page = page;
+      this.get();
+    },
+
+    onChangeLimit(limit: number) {
+      if (this.pagination.limit === limit || this.isLoading) return;
+      this.pagination.limit = limit;
+      this.get();
     },
   },
 });

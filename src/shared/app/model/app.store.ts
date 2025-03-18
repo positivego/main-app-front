@@ -13,7 +13,15 @@ export const useAppStore = defineStore("app-store", {
     isAppLoading: true,
   }),
 
-  getters: {},
+  getters: {
+    getRoleName(state) {
+      return (roleId: number): string => {
+        const role = state.roles.find((el) => el.id == roleId);
+        if (role) return role.name["ru"];
+        return "Не определено";
+      };
+    },
+  },
 
   actions: {
     async init() {

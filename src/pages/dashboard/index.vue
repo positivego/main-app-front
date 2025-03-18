@@ -22,6 +22,7 @@ import { AsaidMenuWidget } from "../../widgets/dashboard/asaid-menu";
   .view {
     position: relative;
     width: calc(100% - $asaid-menu-width);
+    left: $asaid-menu-width;
   }
 }
 </style>

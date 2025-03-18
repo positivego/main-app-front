@@ -19,12 +19,26 @@ const menuItems: AsaidMenuItem[] = [
   },
   {
     type: "title",
-    name: "Пользователи",
+    name: "Аккаунты",
   },
   {
     type: "link",
     name: "Список",
     routeName: ROUTES_NAMES.DASHBOARD.ACCOUNTS.LIST,
+  },
+  {
+    type: "title",
+    name: "Кино",
+  },
+  {
+    type: "link",
+    name: "Список",
+    routeName: ROUTES_NAMES.DASHBOARD.MOVIESTER.MOVIES.LIST,
+  },
+  {
+    type: "link",
+    name: "Жанры",
+    routeName: ROUTES_NAMES.DASHBOARD.MOVIESTER.GENRES.LIST,
   },
 ];
 
@@ -51,10 +65,11 @@ const go = (routeName: string | undefined) => {
 
 <style module lang="scss">
 .root {
-  position: relative;
+  position: fixed;
   width: $asaid-menu-width;
   height: 100vh;
   border-right: solid 1px $border-color;
+  background-color: $body-color;
 
   .item {
     position: relative;

@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { computed, useCssModule, type PropType } from "vue";
+import { CSpinner } from "../spinner";
 
 const props = defineProps({
   type: {
     type: String as PropType<"default" | "accept">,
     default: "default",
+  },
+  isLoading: {
+    type: Boolean,
+    default: false,
   },
   disabled: {
     type: Boolean,
@@ -18,17 +23,20 @@ const style = useCssModule();
 const buttonClass = computed(() => ({
   [style.button]: true,
   [style.buttonDefault]: props.type === "default" && !props.disabled,
-  [style.buttonDisabled]: props.disabled,
+  [style.buttonDisabled]: props.disabled && !props.isLoading,
 }));
 
 const handleClick = (event: MouseEvent) => {
-  if (!props?.disabled) emit("click", event);
+  if (!props?.disabled && !props.isLoading) emit("click", event);
 };
 </script>
 
 <template>
   <div :class="buttonClass" @click="handleClick">
-    <slot></slot>
+    <slot v-if="!props.isLoading"></slot>
+    <div v-else :class="$style.spinner">
+      <CSpinner :size="11"></CSpinner>
+    </div>
   </div>
 </template>
 
@@ -55,5 +63,14 @@ const handleClick = (event: MouseEvent) => {
 .buttonDisabled {
   opacity: 0.7;
   cursor: not-allowed !important;
+}
+
+.spinner {
+  position: relative;
+  height: 10px;
+  padding: 2px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
