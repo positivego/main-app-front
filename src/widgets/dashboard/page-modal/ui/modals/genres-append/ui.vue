@@ -1,0 +1,72 @@
+<script setup lang="ts">
+import { useMoviesterGenreStore } from "@/entities/dashboard/moviester/genres/model/genre.store";
+import { CButton, CInput, CModal } from "@/shared/components";
+import { PAGE_MODALS_NAMES as PMN } from "../../../constants";
+import { usePageModalsStore } from "../../../model";
+
+const pageModalsStore = usePageModalsStore();
+const moviesterGenreStore = useMoviesterGenreStore();
+
+const closeModal = () => {
+  if (moviesterGenreStore.isLoading) return;
+  pageModalsStore.close(PMN.GENRES.APPEND);
+};
+</script>
+
+<template>
+  <CModal title="Добавить жанр" v-if="pageModalsStore.isOpen(PMN.GENRES.APPEND)" @close="closeModal">
+    <div :class="$style.root">
+      <div :class="$style.container">
+        <div :class="$style.title">Введите названия жанра на разных языках</div>
+        <div :class="$style.subtitle">На русском языке</div>
+        <CInput :class="$style.input" placeholder="Введите название" v-model="moviesterGenreStore.genre.name.ru" />
+        <div :class="$style.subtitle">На английском языке</div>
+        <CInput :class="$style.input" placeholder="Введите название" v-model="moviesterGenreStore.genre.name.en" />
+      </div>
+      <div :class="$style.controlls">
+        <CButton
+          :loading="moviesterGenreStore.isLoading"
+          :disabled="!moviesterGenreStore.currentValus"
+          @click="moviesterGenreStore.append"
+        >
+          Добавить
+        </CButton>
+        <CButton type="cancel" :disabled="moviesterGenreStore.isLoading" @click="closeModal">Отмена</CButton>
+      </div>
+    </div>
+  </CModal>
+</template>
+
+<style module lang="scss">
+.root {
+  position: relative;
+
+  .container {
+    position: relative;
+    padding-top: 15px;
+
+    .title {
+      position: relative;
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      position: relative;
+      font-size: 12px;
+      margin-bottom: 7px;
+      color: $subtext-color;
+    }
+
+    .input {
+      margin-bottom: 15px;
+    }
+  }
+
+  .controlls {
+    position: relative;
+    display: flex;
+    padding-top: 15px;
+  }
+}
+</style>

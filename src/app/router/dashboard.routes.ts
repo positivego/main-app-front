@@ -71,7 +71,7 @@ export const dashboardRoutes: RouteRecordRaw[] = [
             name: ROUTES_NAMES.DASHBOARD.MOVIESTER.GENRES.EDIT,
             component: () => import("@/pages/dashboard/moviester/genres/edit/index.vue"),
             meta: {
-              title: "Добавление/обновление жанра",
+              title: "Обновление жанра",
               breadcrumbParent: ROUTES_NAMES.DASHBOARD.MOVIESTER.GENRES.LIST,
             },
           },

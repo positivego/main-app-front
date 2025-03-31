@@ -1,5 +1,15 @@
 <script setup lang="ts">
-import { defineEmits, defineProps, onMounted, onUnmounted, type PropType, ref, useCssModule } from "vue";
+import {
+  computed,
+  defineEmits,
+  defineProps,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  type PropType,
+  ref,
+  useCssModule,
+} from "vue";
 
 export type DropdownItem = {
   id: number | string;
@@ -20,6 +30,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  searchable: {
+    type: Boolean,
+    default: false,
+  },
   openUp: {
     type: Boolean,
     default: false,
@@ -35,13 +49,27 @@ const style = useCssModule();
 const emit = defineEmits(["update:modelValue"]);
 const isOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
+const inputRef = ref<HTMLInputElement | null>(null);
+const input = ref<string>("");
 
-const toggleDropdown = (e: MouseEvent) => {
-  const target = e?.target as HTMLDivElement;
+const currentItems = computed(() => {
+  if (props.searchable && input.value?.length) {
+    return props?.items?.filter((el) => el.label.includes(input.value)).slice(0, 50);
+  } else return props.items.slice(0, 50);
+});
+
+const toggleDropdown = async (event: MouseEvent) => {
+  const target = event?.target as HTMLDivElement;
   if (target?.classList?.contains(style.clear)) {
     return (isOpen.value = false);
   }
+
   isOpen.value = !isOpen.value;
+
+  if (isOpen.value && props.searchable) {
+    await nextTick();
+    inputRef.value?.focus();
+  }
 };
 
 const selectItem = (item: DropdownItem) => {
@@ -70,6 +98,9 @@ const isSelected = (item: DropdownItem) => {
 };
 
 const handleClickOutside = (event: Event) => {
+  const target = event?.target as HTMLDivElement;
+
+  if (target?.classList?.contains(style.label)) return;
   if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
     isOpen.value = false;
   }
@@ -88,12 +119,25 @@ onUnmounted(() => {
   <div :class="$style.dropdown" ref="dropdownRef">
     <div :class="$style.trigger" @click="toggleDropdown">
       <div :class="$style.title" v-if="!props.multiple">
-        <div :class="$style.label">{{ props?.modelValue[0]?.label || "Выберите..." }}</div>
+        <div v-if="(props.searchable && !isOpen) || !props.searchable" :class="$style.label">
+          {{ props?.modelValue[0]?.label || "Выберите..." }}
+        </div>
+        <div v-if="props.searchable && isOpen" :class="$style.input">
+          <input type="text" v-model="input" ref="inputRef" placeholder="Поиск" />
+        </div>
         <div v-if="props.clearable" :class="$style.clear" @click.self="removeItem">×</div>
       </div>
       <div :class="$style.tags" v-else>
-        <div :class="$style.title" v-if="!props?.modelValue?.length"><span>Выберите...</span></div>
+        <div
+          :class="$style.title"
+          v-if="!props?.modelValue?.length && ((props.searchable && !isOpen) || !props.searchable)"
+        >
+          <span>Выберите...</span>
+        </div>
         <div :class="$style.tag" v-else v-for="item in props?.modelValue" :key="item.id">{{ item.label }}</div>
+        <div v-if="props.searchable && isOpen" :class="$style.input">
+          <input type="text" v-model="input" ref="inputRef" placeholder="Поиск" />
+        </div>
       </div>
     </div>
 
@@ -102,13 +146,15 @@ onUnmounted(() => {
       :class="[$style.menu, { [$style.menuOpenDown]: !props.openUp }, { [$style.menuOpenUp]: props.openUp }]"
     >
       <div
-        v-for="item in items"
+        v-for="item in currentItems"
         :key="item.id"
         :class="[$style.item, isSelected(item) ? $style.selected : '']"
         @click="selectItem(item)"
       >
         {{ item.label }}
       </div>
+
+      <div :class="$style.empty" v-if="!currentItems?.length">Нет элементов ...</div>
     </div>
   </div>
 </template>
@@ -123,7 +169,7 @@ onUnmounted(() => {
 .trigger {
   position: relative;
   display: flex;
-  padding: 10px;
+  padding: 10px 0 0 10px;
   border-radius: 3px;
   font-size: 12px;
   cursor: pointer;
@@ -139,6 +185,7 @@ onUnmounted(() => {
     position: relative;
     display: flex;
     width: 100%;
+    padding: 0 10px 10px 0;
     align-items: baseline;
     justify-content: space-between;
 
@@ -160,6 +207,20 @@ onUnmounted(() => {
         color: $border-color-active;
       }
     }
+
+    .input {
+      position: relative;
+      width: 100px;
+
+      input {
+        position: relative;
+        width: 100%;
+        background-color: transparent;
+        border: none;
+        color: $subtext-color;
+        outline: none;
+      }
+    }
   }
 
   .tags {
@@ -175,8 +236,24 @@ onUnmounted(() => {
       font-size: 12px;
       padding: 3px 7px;
       border-radius: 3px;
-      margin-right: 5px;
-      margin-bottom: 5px;
+      margin: 0 10px 10px 0;
+    }
+
+    .input {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100px;
+      margin: 0 10px 10px 0;
+
+      input {
+        position: relative;
+        width: 100%;
+        background-color: transparent;
+        border: none;
+        color: $subtext-color;
+        outline: none;
+      }
     }
   }
 
@@ -210,6 +287,10 @@ onUnmounted(() => {
     &:hover {
       background-color: $body-color-active;
     }
+  }
+
+  .empty {
+    padding: 10px;
   }
 
   .selected {

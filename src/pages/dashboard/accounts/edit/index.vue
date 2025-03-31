@@ -12,7 +12,7 @@ const accountsEditStore = useAccountsEditStore();
     <template v-slot:controlls>
       <CButton
         :disabled="!accountsEditStore.isAccountChange"
-        :is-loading="accountsEditStore.isUpdated"
+        :loading="accountsEditStore.isUpdated"
         @click="accountsEditStore.update"
       >
         Обновить

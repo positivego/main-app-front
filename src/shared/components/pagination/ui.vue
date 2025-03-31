@@ -152,7 +152,7 @@ onMounted(() => {
       </div>
     </div>
     <div :class="$style.itemsCount">
-      <div :class="$style.title">Всего элентов:</div>
+      <div :class="$style.title">Всего элементов:</div>
       <CDropdown
         :items="getDropdownItems"
         v-model="countItemsRef"

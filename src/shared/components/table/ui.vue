@@ -2,7 +2,7 @@
 import { defineProps, type PropType } from "vue";
 import { CSpinner } from "../spinner";
 
-type Column = {
+export type CTableColumn = {
   key: string;
   label: string;
 };
@@ -11,7 +11,7 @@ type Row = Record<string, any>;
 const props = defineProps({
   columns: {
     default: [],
-    type: Array as PropType<Column[]>,
+    type: Array as PropType<CTableColumn[]>,
   },
   rows: {
     default: [],

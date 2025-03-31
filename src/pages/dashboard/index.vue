@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { PageModalWidget } from "@/widgets/dashboard/page-modal";
 import { RouterView } from "vue-router";
 import { AsaidMenuWidget } from "../../widgets/dashboard/asaid-menu";
 </script>
@@ -9,6 +10,7 @@ import { AsaidMenuWidget } from "../../widgets/dashboard/asaid-menu";
     <div :class="$style.view">
       <RouterView />
     </div>
+    <PageModalWidget />
   </div>
 </template>
 

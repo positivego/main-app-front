@@ -4,10 +4,10 @@ import { CSpinner } from "../spinner";
 
 const props = defineProps({
   type: {
-    type: String as PropType<"default" | "accept">,
+    type: String as PropType<"default" | "accept" | "cancel">,
     default: "default",
   },
-  isLoading: {
+  loading: {
     type: Boolean,
     default: false,
   },
@@ -22,18 +22,19 @@ const style = useCssModule();
 
 const buttonClass = computed(() => ({
   [style.button]: true,
-  [style.buttonDefault]: props.type === "default" && !props.disabled,
-  [style.buttonDisabled]: props.disabled && !props.isLoading,
+  [style.buttonDefault]: props.type === "default",
+  [style.buttonCancel]: props.type === "cancel",
+  [style.buttonDisabled]: props.disabled && !props.loading,
 }));
 
 const handleClick = (event: MouseEvent) => {
-  if (!props?.disabled && !props.isLoading) emit("click", event);
+  if (!props?.disabled && !props.loading) emit("click", event);
 };
 </script>
 
 <template>
   <div :class="buttonClass" @click="handleClick">
-    <slot v-if="!props.isLoading"></slot>
+    <slot v-if="!props.loading"></slot>
     <div v-else :class="$style.spinner">
       <CSpinner :size="11"></CSpinner>
     </div>
@@ -57,6 +58,16 @@ const handleClick = (event: MouseEvent) => {
   &:hover {
     border: 1px solid $border-color-active;
     box-shadow: 0px 0px 3px $border-color-active;
+  }
+}
+
+.buttonCancel {
+  border: 1px solid $body-color;
+  box-shadow: none !important;
+  transition: 0.3s;
+
+  &:hover {
+    color: $border-color-active;
   }
 }
 
