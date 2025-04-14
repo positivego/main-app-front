@@ -37,6 +37,11 @@ const menuItems: AsaidMenuItem[] = [
   },
   {
     type: "link",
+    name: "Типы",
+    routeName: ROUTES_NAMES.DASHBOARD.MOVIESTER.MOVIE_TYPES.LIST,
+  },
+  {
+    type: "link",
     name: "Жанры",
     routeName: ROUTES_NAMES.DASHBOARD.MOVIESTER.GENRES.LIST,
   },

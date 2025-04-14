@@ -72,6 +72,7 @@ const emit = defineEmits(["close"]);
       background-color: $body-color;
       box-shadow: 0px 0px 20px 0px #000000a3;
       z-index: 10;
+      animation: modalFadeIn 0.2s ease-out;
       overflow: hidden;
 
       .titleContainer {
@@ -117,6 +118,17 @@ const emit = defineEmits(["close"]);
         left: 0;
         background-color: $body-color;
       }
+    }
+  }
+
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
     }
   }
 }

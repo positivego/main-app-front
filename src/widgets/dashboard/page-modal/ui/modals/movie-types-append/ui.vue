@@ -1,38 +1,38 @@
 <script setup lang="ts">
-import { useMoviesterGenreStore } from "@/entities/dashboard/moviester/genres/list/model/genre.store";
+import { useMoviesteMovieTypeStore } from "@/entities/dashboard/moviester/movie-types/list/model/movie-type.store";
 import { CButton, CInput, CModal } from "@/shared/components";
 import { PAGE_MODALS_NAMES as PMN } from "../../../constants";
 import { usePageModalsStore } from "../../../model";
 
 const pageModalsStore = usePageModalsStore();
-const moviesterGenreStore = useMoviesterGenreStore();
+const moviesterMovieTypeStore = useMoviesteMovieTypeStore();
 
 const closeModal = () => {
-  if (moviesterGenreStore.isLoading) return;
-  pageModalsStore.close(PMN.GENRES.APPEND);
-  moviesterGenreStore.reset();
+  if (moviesterMovieTypeStore.isLoading) return;
+  pageModalsStore.close(PMN.MOVIE_TYPES.APPEND);
+  moviesterMovieTypeStore.reset();
 };
 </script>
 
 <template>
-  <CModal title="Добавить жанр" v-if="pageModalsStore.isOpen(PMN.GENRES.APPEND)" @close="closeModal">
+  <CModal title="Добавить тип" v-if="pageModalsStore.isOpen(PMN.MOVIE_TYPES.APPEND)" @close="closeModal">
     <div :class="$style.root">
       <div :class="$style.container">
-        <div :class="$style.title">Введите названия жанра на разных языках</div>
+        <div :class="$style.title">Введите названия типа на разных языках</div>
         <div :class="$style.subtitle">На русском языке</div>
-        <CInput :class="$style.input" placeholder="Введите название" v-model="moviesterGenreStore.genre.name.ru" />
+        <CInput :class="$style.input" placeholder="Введите название" v-model="moviesterMovieTypeStore.type.name.ru" />
         <div :class="$style.subtitle">На английском языке</div>
-        <CInput :class="$style.input" placeholder="Введите название" v-model="moviesterGenreStore.genre.name.en" />
+        <CInput :class="$style.input" placeholder="Введите название" v-model="moviesterMovieTypeStore.type.name.en" />
       </div>
       <div :class="$style.controlls">
         <CButton
-          :loading="moviesterGenreStore.isLoading"
-          :disabled="!moviesterGenreStore.currentValus"
-          @click="moviesterGenreStore.append"
+          :loading="moviesterMovieTypeStore.isLoading"
+          :disabled="!moviesterMovieTypeStore.currentValus"
+          @click="moviesterMovieTypeStore.append"
         >
           Добавить
         </CButton>
-        <CButton type="cancel" :disabled="moviesterGenreStore.isLoading" @click="closeModal">Отмена</CButton>
+        <CButton type="cancel" :disabled="moviesterMovieTypeStore.isLoading" @click="closeModal">Отмена</CButton>
       </div>
     </div>
   </CModal>

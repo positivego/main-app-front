@@ -56,6 +56,28 @@ export const dashboardRoutes: RouteRecordRaw[] = [
         ],
       },
       {
+        path: "moviester/movie-types",
+        name: ROUTES_NAMES.DASHBOARD.MOVIESTER.MOVIE_TYPES.MAIN,
+        component: () => import("@/pages/dashboard/moviester/index.vue"),
+        meta: { title: "Список типов", breadcrumbParent: ROUTES_NAMES.DASHBOARD.MAIN },
+        children: [
+          {
+            path: "",
+            name: ROUTES_NAMES.DASHBOARD.MOVIESTER.MOVIE_TYPES.LIST,
+            component: () => import("@/pages/dashboard/moviester/movie-types/list/index.vue"),
+          },
+          {
+            path: ":id/edit",
+            name: ROUTES_NAMES.DASHBOARD.MOVIESTER.MOVIE_TYPES.EDIT,
+            component: () => import("@/pages/dashboard/moviester/movie-types/edit/index.vue"),
+            meta: {
+              title: "Обновление типа",
+              breadcrumbParent: ROUTES_NAMES.DASHBOARD.MOVIESTER.MOVIE_TYPES.LIST,
+            },
+          },
+        ],
+      },
+      {
         path: "moviester/genres",
         name: ROUTES_NAMES.DASHBOARD.MOVIESTER.GENRES.MAIN,
         component: () => import("@/pages/dashboard/moviester/index.vue"),

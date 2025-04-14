@@ -1,9 +1,11 @@
 import { moviesterApi } from "@/shared/api/moviester/requests.api";
+import { usePageModalsStore } from "@/widgets/dashboard/page-modal";
+import { PAGE_MODALS_NAMES as PMN } from "@/widgets/dashboard/page-modal/constants";
 import { defineStore } from "pinia";
 import type { MoviesterGenreState } from "../types/general.types";
 import { useMoviesterGenresListStore } from "./genres.store";
 
-export const useMoviesterGenreStore = defineStore("entity-moviester-genret-store", {
+export const useMoviesterGenreStore = defineStore("entity-moviester-genre-store", {
   state: (): MoviesterGenreState => ({
     genre: {
       id: 0,
@@ -33,12 +35,12 @@ export const useMoviesterGenreStore = defineStore("entity-moviester-genret-store
       this.isLoading = true;
 
       try {
-        const newGenre = await moviesterApi.genres.create(this.genre.name);
+        await moviesterApi.genres.create(this.genre.name);
 
-        console.log({ newGenre });
+        usePageModalsStore().close(PMN.GENRES.APPEND);
+        this.reset();
 
-        const genresStore = useMoviesterGenresListStore();
-        genresStore.get();
+        useMoviesterGenresListStore().get();
       } catch (error) {
         console.debug(error);
       }

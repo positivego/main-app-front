@@ -1,38 +1,38 @@
 <script setup lang="ts">
-import { MoviesterGenresEdit } from "@/entities/dashboard/moviester/genres/edit";
-import { useMoviesterGenreEditStore } from "@/entities/dashboard/moviester/genres/edit/model/genre-edit.store";
+import { MoviesterMovieTypeEdit } from "@/entities/dashboard";
+import { useMoviesterMovieTypeEditStore } from "@/entities/dashboard/moviester/movie-types/edit/model/movie-type-edit.store";
 import { CButton } from "@/shared/components";
 import { PageHeaderWidget } from "@/widgets/dashboard/page-header";
 import { usePageModalsStore } from "@/widgets/dashboard/page-modal";
 import { PAGE_MODALS_NAMES as PMN } from "@/widgets/dashboard/page-modal/constants";
 
-const moviesterGenreEditStore = useMoviesterGenreEditStore();
+const moviesterMovieTypeEditStore = useMoviesterMovieTypeEditStore();
 const pageModalsStore = usePageModalsStore();
 </script>
 
 <template>
-  <PageHeaderWidget title="Жанры">
+  <PageHeaderWidget title="Типы">
     <template v-slot:controlls>
       <div :class="$style.controlls">
         <CButton
           :class="$style.btn"
-          :disabled="!moviesterGenreEditStore.isChange || moviesterGenreEditStore.isDeleted"
-          :loading="moviesterGenreEditStore.isUpdated"
-          @click="moviesterGenreEditStore.update"
+          :disabled="!moviesterMovieTypeEditStore.isChange || moviesterMovieTypeEditStore.isDeleted"
+          :loading="moviesterMovieTypeEditStore.isUpdated"
+          @click="moviesterMovieTypeEditStore.update"
         >
           Обновить
         </CButton>
         <CButton
-          :disabled="moviesterGenreEditStore.isUpdated"
-          :loading="moviesterGenreEditStore.isDeleted"
-          @click="pageModalsStore.init(PMN.GENRES.DELETE)"
+          :disabled="moviesterMovieTypeEditStore.isUpdated"
+          :loading="moviesterMovieTypeEditStore.isDeleted"
+          @click="pageModalsStore.init(PMN.MOVIE_TYPES.DELETE)"
         >
           Удалить
         </CButton>
       </div>
     </template>
   </PageHeaderWidget>
-  <MoviesterGenresEdit />
+  <MoviesterMovieTypeEdit />
 </template>
 
 <style module lang="scss">
