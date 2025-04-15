@@ -1,4 +1,5 @@
 import { API } from "../instances";
+import type { CountriesPaginationData, CountriesQueryParams, MoviesterCountry } from "./dto/countries.dto";
 import type { MoviesterEntityName } from "./dto/general.dto";
 import type { GenresPaginationData, GenresQueryParams, MoviesterGenre } from "./dto/genres.dto";
 import type { MoviesterMovieType, MovieTypesPaginationData, MovieTypesQueryParams } from "./dto/movie-type.dto";
@@ -37,6 +38,24 @@ export const moviesterApi = {
 
     delete: async (id: number): Promise<number> => {
       return API.delete(`/moviester/genres/${id}`).then((res) => res?.data);
+    },
+  },
+
+  countries: {
+    get: async (params: CountriesQueryParams): Promise<CountriesPaginationData> => {
+      return API.get("/moviester/countries", { params }).then((res) => res?.data);
+    },
+
+    create: async (data: MoviesterEntityName): Promise<MoviesterCountry> => {
+      return API.post("/moviester/countries", data).then((res) => res?.data);
+    },
+
+    update: async (data: MoviesterCountry): Promise<MoviesterCountry> => {
+      return API.patch("/moviester/countries", data).then((res) => res?.data);
+    },
+
+    delete: async (id: number): Promise<number> => {
+      return API.delete(`/moviester/countries/${id}`).then((res) => res?.data);
     },
   },
 };

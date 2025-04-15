@@ -33,6 +33,8 @@ export const dashboardRoutes: RouteRecordRaw[] = [
           },
         ],
       },
+      // MOVIESTER
+      // ФИЛЬМЫ
       {
         path: "moviester/movies",
         name: ROUTES_NAMES.DASHBOARD.MOVIESTER.MOVIES.MAIN,
@@ -55,6 +57,7 @@ export const dashboardRoutes: RouteRecordRaw[] = [
           },
         ],
       },
+      // ТИПЫ
       {
         path: "moviester/movie-types",
         name: ROUTES_NAMES.DASHBOARD.MOVIESTER.MOVIE_TYPES.MAIN,
@@ -77,6 +80,7 @@ export const dashboardRoutes: RouteRecordRaw[] = [
           },
         ],
       },
+      // ЖАНРЫ
       {
         path: "moviester/genres",
         name: ROUTES_NAMES.DASHBOARD.MOVIESTER.GENRES.MAIN,
@@ -95,6 +99,29 @@ export const dashboardRoutes: RouteRecordRaw[] = [
             meta: {
               title: "Обновление жанра",
               breadcrumbParent: ROUTES_NAMES.DASHBOARD.MOVIESTER.GENRES.LIST,
+            },
+          },
+        ],
+      },
+      // СТРАНЫ
+      {
+        path: "moviester/countries",
+        name: ROUTES_NAMES.DASHBOARD.MOVIESTER.COUNTRIES.MAIN,
+        component: () => import("@/pages/dashboard/moviester/index.vue"),
+        meta: { title: "Список стран", breadcrumbParent: ROUTES_NAMES.DASHBOARD.MAIN },
+        children: [
+          {
+            path: "",
+            name: ROUTES_NAMES.DASHBOARD.MOVIESTER.COUNTRIES.LIST,
+            component: () => import("@/pages/dashboard/moviester/countries/list/index.vue"),
+          },
+          {
+            path: ":id/edit",
+            name: ROUTES_NAMES.DASHBOARD.MOVIESTER.COUNTRIES.EDIT,
+            component: () => import("@/pages/dashboard/moviester/countries/edit/index.vue"),
+            meta: {
+              title: "Обновление страны",
+              breadcrumbParent: ROUTES_NAMES.DASHBOARD.MOVIESTER.COUNTRIES.LIST,
             },
           },
         ],

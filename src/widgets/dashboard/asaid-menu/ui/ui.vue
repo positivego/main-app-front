@@ -45,6 +45,11 @@ const menuItems: AsaidMenuItem[] = [
     name: "Жанры",
     routeName: ROUTES_NAMES.DASHBOARD.MOVIESTER.GENRES.LIST,
   },
+  {
+    type: "link",
+    name: "Страны",
+    routeName: ROUTES_NAMES.DASHBOARD.MOVIESTER.COUNTRIES.LIST,
+  },
 ];
 
 const currentRouteName = computed(() => {
