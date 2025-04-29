@@ -37,6 +37,11 @@ const menuItems: AsaidMenuItem[] = [
   },
   {
     type: "link",
+    name: "Актеры",
+    routeName: ROUTES_NAMES.DASHBOARD.MOVIESTER.ACTORS.LIST,
+  },
+  {
+    type: "link",
     name: "Типы",
     routeName: ROUTES_NAMES.DASHBOARD.MOVIESTER.MOVIE_TYPES.LIST,
   },

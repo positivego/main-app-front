@@ -2,6 +2,8 @@ export * from "./button";
 export * from "./checkbox";
 export * from "./dropdown";
 export * from "./icons-sprites";
+export * from "./image";
+export * from "./image-uploader";
 export * from "./input";
 export * from "./modal";
 export * from "./pagination";
