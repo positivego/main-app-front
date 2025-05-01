@@ -20,14 +20,14 @@ const closeModal = () => {
       <div :class="$style.container">
         <div :class="$style.title">Введите имя актера на разных языках</div>
         <div :class="$style.subtitle">На русском языке</div>
-        <CInput :class="$style.input" placeholder="Введите название" v-model="moviesterActorStore.actor.name.ru" />
+        <CInput :class="$style.input" placeholder="Введите название" v-model="moviesterActorStore.actor.data.name.ru" />
         <div :class="$style.subtitle">На английском языке</div>
-        <CInput :class="$style.input" placeholder="Введите название" v-model="moviesterActorStore.actor.name.en" />
+        <CInput :class="$style.input" placeholder="Введите название" v-model="moviesterActorStore.actor.data.name.en" />
       </div>
 
       <div :class="$style.container">
         <div :class="$style.title">Выберите изображение для актера</div>
-        <CImageUploader :class="$style.imageUploader" />
+        <CImageUploader :class="$style.imageUploader" @update:files="moviesterActorStore.changeImages" />
       </div>
 
       <div :class="$style.controlls">

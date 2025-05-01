@@ -1,6 +1,11 @@
 import { getFormDataByObj } from "@/shared/utils/general.utils";
 import { API } from "../instances";
-import type { ActorsPaginationData, ActorsQueryParams, MoviesterActor } from "./dto/actors.dto";
+import type {
+  ActorsPaginationData,
+  ActorsQueryParams,
+  MoviesterActor,
+  MoviesterActorCreateDto,
+} from "./dto/actors.dto";
 import type { CountriesPaginationData, CountriesQueryParams, MoviesterCountry } from "./dto/countries.dto";
 import type { MoviesterEntityName } from "./dto/general.dto";
 import type { GenresPaginationData, GenresQueryParams, MoviesterGenre } from "./dto/genres.dto";
@@ -66,11 +71,15 @@ export const moviesterApi = {
       return API.get("/moviester/actors", { params }).then((res) => res?.data);
     },
 
-    create: async (data: MoviesterActor): Promise<MoviesterActor> => {
+    create: async (data: MoviesterActorCreateDto): Promise<MoviesterActor> => {
       const actorData = getFormDataByObj(data);
       return API.post("/moviester/actors", actorData, { headers: { "Content-Type": "multipart/formdata" } }).then(
         (res) => res?.data
       );
+    },
+
+    delete: async (id: number): Promise<number> => {
+      return API.delete(`/moviester/actors/${id}`).then((res) => res?.data);
     },
   },
 };

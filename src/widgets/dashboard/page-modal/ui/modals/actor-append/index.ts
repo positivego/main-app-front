@@ -1,1 +1,1 @@
-export { default as ActorAppedModal } from "./ui.vue";
+export { default as ActorsAppedModal } from "./ui.vue";

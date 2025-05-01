@@ -7,6 +7,13 @@ export interface MoviesterActor {
   images: File[];
 }
 
+export interface MoviesterActorCreateDto {
+  data: {
+    name: MoviesterEntityName;
+  };
+  images: File[];
+}
+
 export interface ActorsQueryParams {
   page: number;
   limit: number;

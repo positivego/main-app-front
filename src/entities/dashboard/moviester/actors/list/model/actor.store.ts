@@ -8,12 +8,12 @@ import { useMoviesterActorsListStore } from "./actors.store";
 export const useMoviesterActorStore = defineStore("entity-moviester-actor-store", {
   state: (): MoviesterActorState => ({
     actor: {
-      id: 0,
-      name: {
-        ru: "",
-        en: "",
+      data: {
+        name: {
+          ru: "",
+          en: "",
+        },
       },
-      slug: "",
       images: [],
     },
     isLoading: false,
@@ -21,8 +21,8 @@ export const useMoviesterActorStore = defineStore("entity-moviester-actor-store"
 
   getters: {
     currentNames(state): boolean {
-      if (!state?.actor?.name?.ru?.length) return false;
-      if (!state?.actor?.name?.en?.length) return false;
+      if (!state?.actor?.data.name?.ru?.length) return false;
+      if (!state?.actor?.data.name?.en?.length) return false;
       return true;
     },
 
@@ -50,11 +50,13 @@ export const useMoviesterActorStore = defineStore("entity-moviester-actor-store"
       this.isLoading = false;
     },
 
+    changeImages(images: File[]) {
+      this.actor.images = images;
+    },
+
     reset() {
-      this.actor.id = 0;
-      this.actor.name.ru = "";
-      this.actor.name.en = "";
-      this.actor.slug = "";
+      this.actor.data.name.ru = "";
+      this.actor.data.name.en = "";
       this.actor.images = [];
     },
   },

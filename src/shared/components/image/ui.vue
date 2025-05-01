@@ -35,11 +35,19 @@ const rootStyles = computed(() => ({
   width: `${props.width}px`,
   height: `${props.height}px`,
 }));
+
+const mainLetter = computed(() => {
+  if (props?.alt?.length) return props.alt[0];
+  else return "X";
+});
 </script>
 
 <template>
   <div :class="rootClasses" :style="rootStyles">
-    <img :src="props.src" :alt="props.alt" />
+    <img v-if="props?.src?.length" :src="props.src" :alt="props.alt" />
+    <div v-else :class="$style.noImage">
+      <span>{{ mainLetter }}</span>
+    </div>
   </div>
 </template>
 
@@ -55,6 +63,24 @@ const rootStyles = computed(() => ({
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .noImage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: $border-color-active;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      position: relative;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: $subtext-color !important;
+    }
   }
 }
 

@@ -1,7 +1,7 @@
-import type { MoviesterActor } from "@/shared/api/moviester/dto/actors.dto";
+import type { MoviesterActor, MoviesterActorCreateDto } from "@/shared/api/moviester/dto/actors.dto";
 
 export interface MoviesterActorState {
-  actor: MoviesterActor;
+  actor: MoviesterActorCreateDto;
   isLoading: boolean;
 }
 

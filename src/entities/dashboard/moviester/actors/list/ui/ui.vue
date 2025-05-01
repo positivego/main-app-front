@@ -37,8 +37,8 @@ onMounted(() => {
   <CTable :columns="columns" :rows="moviesterActorsListStore.actors" :is-loading="moviesterActorsListStore.isLoading">
     <template #name="{ row }">
       <div :class="$style.name" @click="go(row.id)">
-        <div :class="$style.img"><CImage :src="row.images[0]" /></div>
-        {{ row.name.ru }}
+        <div :class="$style.img"><CImage :src="row.images[0]" :alt="row.name.ru" /></div>
+        <div :class="$style.title">{{ row.name.ru }}</div>
       </div>
     </template>
   </CTable>
@@ -66,7 +66,7 @@ onMounted(() => {
     margin-right: 10px;
   }
 
-  &:hover {
+  &:hover .title {
     color: $border-color-active;
     text-decoration: underline;
   }
