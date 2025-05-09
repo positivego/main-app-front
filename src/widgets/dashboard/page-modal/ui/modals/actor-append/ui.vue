@@ -15,7 +15,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <CModal title="Добавить актера" v-if="pageModalsStore.isOpen(PMN.ACTORS.APPEND)" @close="closeModal">
+  <CModal title="Добавить актера" @close="closeModal">
     <div :class="$style.root">
       <div :class="$style.container">
         <div :class="$style.title">Введите имя актера на разных языках</div>

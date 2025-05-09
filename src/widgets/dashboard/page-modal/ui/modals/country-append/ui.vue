@@ -15,7 +15,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <CModal title="Добавить страну" v-if="pageModalsStore.isOpen(PMN.COUNTRIES.APPEND)" @close="closeModal">
+  <CModal title="Добавить страну" @close="closeModal">
     <div :class="$style.root">
       <div :class="$style.container">
         <div :class="$style.title">Введите название страны на разных языках</div>

@@ -1,5 +1,6 @@
 import { getFormDataByObj } from "@/shared/utils/general.utils";
 import { API } from "../instances";
+import type { MoviesterMovieData } from "./dto";
 import type {
   ActorsPaginationData,
   ActorsQueryParams,
@@ -7,11 +8,18 @@ import type {
   MoviesterActorCreateDto,
 } from "./dto/actors.dto";
 import type { CountriesPaginationData, CountriesQueryParams, MoviesterCountry } from "./dto/countries.dto";
+import type { DirectorsPaginationData, DirectorsQueryParams, MoviesterDirector } from "./dto/directors.dto";
 import type { MoviesterEntityName } from "./dto/general.dto";
 import type { GenresPaginationData, GenresQueryParams, MoviesterGenre } from "./dto/genres.dto";
 import type { MoviesterMovieType, MovieTypesPaginationData, MovieTypesQueryParams } from "./dto/movie-type.dto";
 
 export const moviesterApi = {
+  movies: {
+    getData: async (): Promise<MoviesterMovieData> => {
+      return API.get("/moviester/movies/data").then((res) => res?.data);
+    },
+  },
+
   movieTypes: {
     get: async (params: MovieTypesQueryParams): Promise<MovieTypesPaginationData> => {
       return API.get("/moviester/movie-types", { params }).then((res) => res?.data);
@@ -78,8 +86,39 @@ export const moviesterApi = {
       );
     },
 
+    update: async (data: any): Promise<MoviesterActor> => {
+      const actorData = getFormDataByObj(data);
+      return API.patch("/moviester/actors", actorData, { headers: { "Content-Type": "multipart/formdata" } }).then(
+        (res) => res?.data
+      );
+    },
+
     delete: async (id: number): Promise<number> => {
       return API.delete(`/moviester/actors/${id}`).then((res) => res?.data);
+    },
+  },
+
+  directors: {
+    get: async (params: DirectorsQueryParams): Promise<DirectorsPaginationData> => {
+      return API.get("/moviester/directors", { params }).then((res) => res?.data);
+    },
+
+    create: async (data: MoviesterActorCreateDto): Promise<MoviesterDirector> => {
+      const directorData = getFormDataByObj(data);
+      return API.post("/moviester/directors", directorData, { headers: { "Content-Type": "multipart/formdata" } }).then(
+        (res) => res?.data
+      );
+    },
+
+    update: async (data: any): Promise<MoviesterDirector> => {
+      const directorData = getFormDataByObj(data);
+      return API.patch("/moviester/directors", directorData, {
+        headers: { "Content-Type": "multipart/formdata" },
+      }).then((res) => res?.data);
+    },
+
+    delete: async (id: number): Promise<number> => {
+      return API.delete(`/moviester/directors/${id}`).then((res) => res?.data);
     },
   },
 };

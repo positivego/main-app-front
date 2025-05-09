@@ -42,6 +42,11 @@ const menuItems: AsaidMenuItem[] = [
   },
   {
     type: "link",
+    name: "Режиссеры",
+    routeName: ROUTES_NAMES.DASHBOARD.MOVIESTER.DIRECTORS.LIST,
+  },
+  {
+    type: "link",
     name: "Типы",
     routeName: ROUTES_NAMES.DASHBOARD.MOVIESTER.MOVIE_TYPES.LIST,
   },

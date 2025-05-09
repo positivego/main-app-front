@@ -48,6 +48,12 @@ export const useMoviesterActorEditStore = defineStore("entity-moviester-actor-ed
       }
     },
 
+    changeImages(images: (File | string)[]) {
+      if (this.actor) {
+        this.actor.images = images;
+      }
+    },
+
     async update() {
       this.isUpdated = true;
 
@@ -57,7 +63,7 @@ export const useMoviesterActorEditStore = defineStore("entity-moviester-actor-ed
       }
 
       try {
-        //await moviesterApi.actors.update(this.actor);
+        await moviesterApi.actors.update(this.actor);
         router.push({ name: ROUTES_NAMES.DASHBOARD.MOVIESTER.ACTORS.LIST });
       } catch (error) {
         console.debug(error);

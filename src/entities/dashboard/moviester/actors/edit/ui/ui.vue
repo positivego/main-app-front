@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CInput } from "@/shared/components";
+import { CImageUploader, CInput } from "@/shared/components";
 import { ROUTES_NAMES } from "@/shared/constants/routes.constants";
 import { onBeforeMount } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -17,13 +17,21 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <div :class="$style.root">
-    <div :class="$style.container" v-if="moviesterActorEditStore.actor">
+  <div :class="$style.root" v-if="moviesterActorEditStore.actor">
+    <div :class="$style.container">
       <div :class="$style.title">Обновления актера {{ moviesterActorEditStore?.actorCopy?.name?.ru ?? "" }}</div>
       <div :class="$style.subtitle">На русском языке</div>
       <CInput :class="$style.input" placeholder="Введите имя" v-model="moviesterActorEditStore.actor.name.ru" />
       <div :class="$style.subtitle">На английском языке</div>
       <CInput :class="$style.input" placeholder="Введите имя" v-model="moviesterActorEditStore.actor.name.en" />
+    </div>
+
+    <div :class="$style.container">
+      <div :class="$style.title">Обновление изображений для актера</div>
+      <CImageUploader
+        :uploads-images="moviesterActorEditStore.actor.images"
+        @update:files="moviesterActorEditStore.changeImages"
+      />
     </div>
   </div>
 </template>

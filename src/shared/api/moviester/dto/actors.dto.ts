@@ -4,14 +4,14 @@ export interface MoviesterActor {
   id: number;
   name: MoviesterEntityName;
   slug: string;
-  images: File[];
+  images: (File | string)[];
 }
 
 export interface MoviesterActorCreateDto {
   data: {
     name: MoviesterEntityName;
   };
-  images: File[];
+  images: (File | string)[];
 }
 
 export interface ActorsQueryParams {

@@ -58,8 +58,10 @@ const emit = defineEmits(["close"]);
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: center;
+    overflow-y: scroll;
+    flex-direction: row;
     justify-content: center;
+    align-items: flex-start;
 
     .modal {
       position: relative;
@@ -74,6 +76,7 @@ const emit = defineEmits(["close"]);
       z-index: 10;
       animation: modalFadeIn 0.2s ease-out;
       overflow: hidden;
+      margin: 40px 0px;
 
       .titleContainer {
         position: relative;

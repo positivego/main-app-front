@@ -14,7 +14,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <CModal title="Удалить актера" v-if="pageModalsStore.isOpen(PMN.ACTORS.DELETE)" @close="closeModal">
+  <CModal title="Удалить актера" @close="closeModal">
     <div :class="$style.root">
       <div :class="$style.text">
         Вы действительно хотите удалить актера {{ moviesterActorEditStore?.actorCopy?.name?.ru }} ?

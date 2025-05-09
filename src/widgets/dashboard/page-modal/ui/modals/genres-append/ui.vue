@@ -15,7 +15,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <CModal title="Добавить жанр" v-if="pageModalsStore.isOpen(PMN.GENRES.APPEND)" @close="closeModal">
+  <CModal title="Добавить жанр" @close="closeModal">
     <div :class="$style.root">
       <div :class="$style.container">
         <div :class="$style.title">Введите названия жанра на разных языках</div>

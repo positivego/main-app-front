@@ -60,9 +60,9 @@ const currentItems = computed(() => {
 
 const toggleDropdown = async (event: MouseEvent) => {
   const target = event?.target as HTMLDivElement;
-  if (target?.classList?.contains(style.clear)) {
-    return (isOpen.value = false);
-  }
+
+  if (target?.classList?.contains(style.searchInput)) return;
+  if (target?.classList?.contains(style.clear)) return (isOpen.value = false);
 
   isOpen.value = !isOpen.value;
 
@@ -85,8 +85,12 @@ const selectItem = (item: DropdownItem) => {
   }
 };
 
-const removeItem = () => {
+const removeItem = (id: number | undefined) => {
   if (props.multiple) {
+    const currentItems = [...props.modelValue];
+    const index = currentItems.findIndex((selected) => selected.id === id);
+    currentItems.splice(index!, 1);
+    emit("update:modelValue", currentItems);
   } else {
     emit("update:modelValue", []);
     isOpen.value = false;
@@ -98,10 +102,13 @@ const isSelected = (item: DropdownItem) => {
 };
 
 const handleClickOutside = (event: Event) => {
-  const target = event?.target as HTMLDivElement;
-
-  if (target?.classList?.contains(style.label)) return;
   if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
+    const target = event?.target as HTMLDivElement;
+
+    if (target?.classList?.contains(style.label)) return;
+    if (target?.classList?.contains(style.placeholder)) return;
+    if (target?.classList?.contains(style.searchInput)) return;
+
     isOpen.value = false;
   }
 };
@@ -123,20 +130,23 @@ onUnmounted(() => {
           {{ props?.modelValue[0]?.label || "Выберите..." }}
         </div>
         <div v-if="props.searchable && isOpen" :class="$style.input">
-          <input type="text" v-model="input" ref="inputRef" placeholder="Поиск" />
+          <input type="text" v-model="input" ref="inputRef" placeholder="Поиск" :class="$style.searchInput" />
         </div>
-        <div v-if="props.clearable" :class="$style.clear" @click.self="removeItem">×</div>
+        <div v-if="props.clearable" :class="$style.clear" @click.self="removeItem(undefined)">×</div>
       </div>
       <div :class="$style.tags" v-else>
         <div
           :class="$style.title"
           v-if="!props?.modelValue?.length && ((props.searchable && !isOpen) || !props.searchable)"
         >
-          <span>Выберите...</span>
+          <span :class="$style.placeholder">Выберите...</span>
         </div>
-        <div :class="$style.tag" v-else v-for="item in props?.modelValue" :key="item.id">{{ item.label }}</div>
+        <div :class="$style.tag" v-else v-for="item in props?.modelValue" :key="item.id">
+          <span>{{ item.label }}</span>
+          <div v-if="props.clearable" :class="$style.clear" @click.self="removeItem(+item.id)">×</div>
+        </div>
         <div v-if="props.searchable && isOpen" :class="$style.input">
-          <input type="text" v-model="input" ref="inputRef" placeholder="Поиск" />
+          <input type="text" v-model="input" ref="inputRef" placeholder="Поиск" :class="$style.searchInput" />
         </div>
       </div>
     </div>
@@ -160,6 +170,14 @@ onUnmounted(() => {
 </template>
 
 <style module lang="scss">
+.placeholder {
+  position: relative;
+}
+
+.searchInput {
+  position: relative;
+}
+
 .dropdown {
   position: relative;
   display: flex;
@@ -188,6 +206,7 @@ onUnmounted(() => {
     padding: 0 10px 10px 0;
     align-items: baseline;
     justify-content: space-between;
+    align-items: center;
 
     .label {
       position: relative;
@@ -230,6 +249,8 @@ onUnmounted(() => {
 
     .tag {
       position: relative;
+      display: flex;
+      align-items: center;
       cursor: pointer;
       color: #c6c6c6;
       border: 1px solid $border-color;
@@ -237,6 +258,17 @@ onUnmounted(() => {
       padding: 3px 7px;
       border-radius: 3px;
       margin: 0 10px 10px 0;
+
+      .clear {
+        position: relative;
+        padding-left: 10px;
+        font-size: 15px;
+        transition: 0.3s;
+
+        &:hover {
+          color: $border-color-active;
+        }
+      }
     }
 
     .input {

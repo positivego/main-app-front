@@ -14,7 +14,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <CModal title="Удалить тип" v-if="pageModalsStore.isOpen(PMN.MOVIE_TYPES.DELETE)" @close="closeModal">
+  <CModal title="Удалить тип" @close="closeModal">
     <div :class="$style.root">
       <div :class="$style.text">
         Вы действительно хотите удалить тип {{ moviesterMovieTypeEditStore?.typeCopy?.name?.ru }} ?

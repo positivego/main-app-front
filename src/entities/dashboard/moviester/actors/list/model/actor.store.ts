@@ -50,7 +50,7 @@ export const useMoviesterActorStore = defineStore("entity-moviester-actor-store"
       this.isLoading = false;
     },
 
-    changeImages(images: File[]) {
+    changeImages(images: (File | string)[]) {
       this.actor.images = images;
     },
 

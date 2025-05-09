@@ -149,6 +149,29 @@ export const dashboardRoutes: RouteRecordRaw[] = [
           },
         ],
       },
+      // РЕЖИССЕРЫ
+      {
+        path: "moviester/directors",
+        name: ROUTES_NAMES.DASHBOARD.MOVIESTER.DIRECTORS.MAIN,
+        component: () => import("@/pages/dashboard/moviester/index.vue"),
+        meta: { title: "Список режиссеров", breadcrumbParent: ROUTES_NAMES.DASHBOARD.MAIN },
+        children: [
+          {
+            path: "",
+            name: ROUTES_NAMES.DASHBOARD.MOVIESTER.DIRECTORS.LIST,
+            component: () => import("@/pages/dashboard/moviester/directors/list/index.vue"),
+          },
+          {
+            path: ":id/edit",
+            name: ROUTES_NAMES.DASHBOARD.MOVIESTER.DIRECTORS.EDIT,
+            component: () => import("@/pages/dashboard/moviester/directors/edit/index.vue"),
+            meta: {
+              title: "Обновление режиссера",
+              breadcrumbParent: ROUTES_NAMES.DASHBOARD.MOVIESTER.DIRECTORS.LIST,
+            },
+          },
+        ],
+      },
     ],
   },
 ];

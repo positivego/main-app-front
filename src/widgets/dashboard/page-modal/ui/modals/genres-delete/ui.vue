@@ -14,7 +14,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <CModal title="Удалить жанр" v-if="pageModalsStore.isOpen(PMN.GENRES.DELETE)" @close="closeModal">
+  <CModal title="Удалить жанр" @close="closeModal">
     <div :class="$style.root">
       <div :class="$style.text">
         Вы действительно хотите удалить жанр {{ moviesterGenreEditStore?.genreCopy?.name?.ru }} ?

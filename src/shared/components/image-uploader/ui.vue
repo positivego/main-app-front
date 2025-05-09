@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineEmits, defineProps, ref } from "vue";
+import { defineEmits, defineProps, onMounted, ref, type PropType } from "vue";
 
 const props = defineProps({
   loading: {
@@ -13,6 +13,10 @@ const props = defineProps({
   imageHeight: {
     type: Number,
     default: 100,
+  },
+  uploadsImages: {
+    type: Array as PropType<(File | string)[]>,
+    default: () => [],
   },
   buttonWidth: {
     type: Number,
@@ -33,10 +37,10 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
-  (e: "update:files", files: File[]): void;
+  (e: "update:files", files: Array<File | string>): void;
 }>();
 
-const files = ref<File[]>([]);
+const files = ref<Array<File | string>>([]);
 const imagePreviews = ref<string[]>([]);
 
 const handleFileChange = (event: Event) => {
@@ -78,6 +82,16 @@ const removeImage = (index: number) => {
   imagePreviews.value.splice(index, 1);
   emit("update:files", [...files.value]);
 };
+
+onMounted(() => {
+  if (props?.uploadsImages?.length) {
+    files.value = [...props.uploadsImages];
+
+    props.uploadsImages.forEach((el) => {
+      if (typeof el === "string") imagePreviews.value.push(el);
+    });
+  }
+});
 </script>
 
 <template>

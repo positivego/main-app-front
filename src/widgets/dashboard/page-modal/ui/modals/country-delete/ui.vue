@@ -14,7 +14,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <CModal title="Удалить страну" v-if="pageModalsStore.isOpen(PMN.COUNTRIES.DELETE)" @close="closeModal">
+  <CModal title="Удалить страну" @close="closeModal">
     <div :class="$style.root">
       <div :class="$style.text">
         Вы действительно хотите удалить страну {{ moviesterCountryEditStore?.countryCopy?.name?.ru }} ?
