@@ -1,4 +1,5 @@
 import { moviesterApi } from "@/shared/api/moviester";
+import type { DropdownItem } from "@/shared/components/dropdown/ui.vue";
 import { defineStore } from "pinia";
 import type { MoviesterMovieState } from "../types/general.types";
 
@@ -10,14 +11,15 @@ export const useMoviesterMovieStore = defineStore("entity-moviester-movie-store"
           ru: "",
           en: "",
         },
+        description: "",
         genresIds: [],
         actorsIds: [],
         releseDate: "",
-        releseYaer: null,
-        countryId: null,
-        directorId: null,
-        timeCount: null,
-        typeId: null,
+        releseYaer: "",
+        countryId: undefined,
+        directorId: undefined,
+        timeCount: "",
+        typeId: undefined,
       },
       images: {
         images: [],
@@ -44,6 +46,51 @@ export const useMoviesterMovieStore = defineStore("entity-moviester-movie-store"
       if (!this.currentNames) return false;
       return true;
     },
+
+    types(state): DropdownItem[] {
+      return state?.data?.types?.map((el) => {
+        return {
+          id: el.id,
+          label: el.name.ru,
+        };
+      });
+    },
+
+    genres(state): DropdownItem[] {
+      return state?.data?.genres?.map((el) => {
+        return {
+          id: el.id,
+          label: el.name.ru,
+        };
+      });
+    },
+
+    countries(state): DropdownItem[] {
+      return state?.data?.countries?.map((el) => {
+        return {
+          id: el.id,
+          label: el.name.ru,
+        };
+      });
+    },
+
+    directors(state): DropdownItem[] {
+      return state?.data?.directors?.map((el) => {
+        return {
+          id: el.id,
+          label: el.name.ru,
+        };
+      });
+    },
+
+    actors(state): DropdownItem[] {
+      return state?.data?.actors?.map((el) => {
+        return {
+          id: el.id,
+          label: el.name.ru,
+        };
+      });
+    },
   },
 
   actions: {
@@ -52,7 +99,6 @@ export const useMoviesterMovieStore = defineStore("entity-moviester-movie-store"
 
       try {
         const data = await moviesterApi.movies.getData();
-        console.log({ data });
         this.data = data;
       } catch (error) {
         console.debug(error);
@@ -63,6 +109,19 @@ export const useMoviesterMovieStore = defineStore("entity-moviester-movie-store"
 
     async append() {
       this.isLoading = true;
+
+      try {
+        console.log({ m: this.movie });
+        await moviesterApi.movies.create(this.movie);
+
+        // usePageModalsStore().close(PMN.MOVIES.APPEND);
+        // this.reset();
+
+        //useMoviesterGenresListStore().get();
+      } catch (error) {
+        console.debug(error);
+      }
+
       this.isLoading = false;
     },
 
@@ -80,11 +139,11 @@ export const useMoviesterMovieStore = defineStore("entity-moviester-movie-store"
       this.movie.data.genresIds = [];
       this.movie.data.actorsIds = [];
       this.movie.data.releseDate = "";
-      this.movie.data.releseYaer = null;
-      this.movie.data.countryId = null;
-      this.movie.data.directorId = null;
-      this.movie.data.timeCount = null;
-      this.movie.data.typeId = null;
+      this.movie.data.releseYaer = "";
+      this.movie.data.countryId = undefined;
+      this.movie.data.directorId = undefined;
+      this.movie.data.timeCount = "";
+      this.movie.data.typeId = undefined;
       this.movie.images.images = [];
       this.movie.images.poster = [];
 

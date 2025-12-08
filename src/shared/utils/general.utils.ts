@@ -5,25 +5,45 @@ export const deepClone = (obj: any) => {
 export const getFormDataByObj = (obj: Record<string, any>): FormData => {
   const formData = new FormData();
 
-  Object.entries(obj).forEach(([key, value]) => {
+  const appendFormData = (key: string, value: any) => {
     if (value === null || value === undefined) return;
+
+    console.log({ key, value });
 
     if (Array.isArray(value)) {
       value.forEach((item) => {
         if (item instanceof File || item instanceof Blob) {
           formData.append(key, item);
         } else {
-          formData.append(key, JSON.stringify(item));
+          console.log({ item });
+          formData.append(key, item.toString());
         }
       });
+    } else if (key === "name") {
+      formData.append(key, JSON.stringify(value));
     } else if (value instanceof File || value instanceof Blob) {
       formData.append(key, value);
     } else if (typeof value === "object") {
-      formData.append(key, JSON.stringify(value));
+      // Рекурсивно, но без углубления в файлы
+      Object.entries(value).forEach(([nestedKey, nestedVal]) => {
+        appendFormData(nestedKey, nestedVal); // << ключ без префикса
+      });
     } else {
       formData.append(key, value.toString());
     }
+  };
+
+  Object.entries(obj).forEach(([key, value]) => {
+    if (key === "images" && !Array.isArray(value)) {
+      // Не сериализуем images как объект, а обрабатываем поля отдельно
+      Object.entries(value).forEach(([fileKey, fileValue]) => {
+        appendFormData(fileKey, fileValue);
+      });
+    } else {
+      appendFormData(`${key}`, value);
+    }
   });
 
+  console.log({ formData });
   return formData;
 };

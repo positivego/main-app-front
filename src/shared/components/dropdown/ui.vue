@@ -6,15 +6,15 @@ import {
   nextTick,
   onMounted,
   onUnmounted,
-  type PropType,
   ref,
   useCssModule,
+  type PropType,
 } from "vue";
 
 export type DropdownItem = {
   id: number | string;
   label: string;
-  value?: number;
+  value?: any;
 };
 
 const props = defineProps({
@@ -39,14 +39,14 @@ const props = defineProps({
     default: false,
   },
   modelValue: {
-    type: Array as PropType<DropdownItem[]>,
-    default: [],
+    type: [String, Number, Array] as PropType<string | number | Array<string | number>>,
+    default: undefined,
   },
 });
 
+const emit = defineEmits(["update:modelValue"]);
 const style = useCssModule();
 
-const emit = defineEmits(["update:modelValue"]);
 const isOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
 const inputRef = ref<HTMLInputElement | null>(null);
@@ -54,12 +54,19 @@ const input = ref<string>("");
 
 const currentItems = computed(() => {
   if (props.searchable && input.value?.length) {
-    return props?.items?.filter((el) => el.label.includes(input.value)).slice(0, 50);
+    return props.items.filter((el) => el.label.includes(input.value)).slice(0, 50);
   } else return props.items.slice(0, 50);
 });
 
+const selectedItems = computed<DropdownItem[]>(() => {
+  const value = props.modelValue;
+  const values = Array.isArray(value) ? value : value !== undefined ? [value] : [];
+
+  return props.items.filter((item) => values.includes(item.id));
+});
+
 const toggleDropdown = async (event: MouseEvent) => {
-  const target = event?.target as HTMLDivElement;
+  const target = event.target as HTMLElement;
 
   if (target?.classList?.contains(style.searchInput)) return;
   if (target?.classList?.contains(style.clear)) return (isOpen.value = false);
@@ -73,37 +80,41 @@ const toggleDropdown = async (event: MouseEvent) => {
 };
 
 const selectItem = (item: DropdownItem) => {
-  const currentItems = [...props.modelValue];
+  const current = props.modelValue;
+
   if (props.multiple) {
-    const index = currentItems.findIndex((selected) => selected.id === item.id);
-    if (index === -1) currentItems.push(item);
-    else currentItems.splice(index!, 1);
-    emit("update:modelValue", currentItems);
+    const values = Array.isArray(current) ? [...current] : [];
+    const index = values.findIndex((val) => val === item.id);
+    if (index === -1) values.push(item.id);
+    else values.splice(index, 1);
+    emit("update:modelValue", values);
   } else {
-    emit("update:modelValue", [item]);
+    emit("update:modelValue", item.id);
     isOpen.value = false;
   }
 };
 
-const removeItem = (id: number | undefined) => {
+const removeItem = (id: number | string | undefined) => {
+  const current = props.modelValue;
   if (props.multiple) {
-    const currentItems = [...props.modelValue];
-    const index = currentItems.findIndex((selected) => selected.id === id);
-    currentItems.splice(index!, 1);
-    emit("update:modelValue", currentItems);
+    const values = Array.isArray(current) ? [...current] : [];
+    const index = values.findIndex((val) => val === id);
+    if (index !== -1) values.splice(index, 1);
+    emit("update:modelValue", values);
   } else {
-    emit("update:modelValue", []);
+    emit("update:modelValue", undefined);
     isOpen.value = false;
   }
 };
 
 const isSelected = (item: DropdownItem) => {
-  return props.modelValue.find((selected) => selected.id === item.id);
+  const value = props.modelValue;
+  return Array.isArray(value) ? value.includes(item.id) : value === item.id;
 };
 
 const handleClickOutside = (event: Event) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
-    const target = event?.target as HTMLDivElement;
+    const target = event.target as HTMLElement;
 
     if (target?.classList?.contains(style.label)) return;
     if (target?.classList?.contains(style.placeholder)) return;
@@ -116,7 +127,6 @@ const handleClickOutside = (event: Event) => {
 onMounted(() => {
   document.addEventListener("click", handleClickOutside);
 });
-
 onUnmounted(() => {
   document.removeEventListener("click", handleClickOutside);
 });
@@ -127,7 +137,7 @@ onUnmounted(() => {
     <div :class="$style.trigger" @click="toggleDropdown">
       <div :class="$style.title" v-if="!props.multiple">
         <div v-if="(props.searchable && !isOpen) || !props.searchable" :class="$style.label">
-          {{ props?.modelValue[0]?.label || "Выберите..." }}
+          {{ selectedItems[0]?.label || "Выберите..." }}
         </div>
         <div v-if="props.searchable && isOpen" :class="$style.input">
           <input type="text" v-model="input" ref="inputRef" placeholder="Поиск" :class="$style.searchInput" />
@@ -137,11 +147,11 @@ onUnmounted(() => {
       <div :class="$style.tags" v-else>
         <div
           :class="$style.title"
-          v-if="!props?.modelValue?.length && ((props.searchable && !isOpen) || !props.searchable)"
+          v-if="!selectedItems?.length && ((props.searchable && !isOpen) || !props.searchable)"
         >
           <span :class="$style.placeholder">Выберите...</span>
         </div>
-        <div :class="$style.tag" v-else v-for="item in props?.modelValue" :key="item.id">
+        <div :class="$style.tag" v-else v-for="item in selectedItems" :key="item.id">
           <span>{{ item.label }}</span>
           <div v-if="props.clearable" :class="$style.clear" @click.self="removeItem(+item.id)">×</div>
         </div>
@@ -182,6 +192,7 @@ onUnmounted(() => {
   position: relative;
   display: flex;
   user-select: none;
+  min-height: 40px;
 }
 
 .trigger {
@@ -195,8 +206,8 @@ onUnmounted(() => {
   border: 1px solid $border-color;
   transition: 0.3s;
   box-shadow: 0px 0px 3px black;
+  width: 100%;
   min-width: 70px;
-  max-width: 250px;
   overflow: hidden;
 
   .title {

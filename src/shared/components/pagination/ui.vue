@@ -33,7 +33,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["onPrevPage", "onNextPage", "onSelectPage", "onChangeLimit"]);
-const countItemsRef = ref<DropdownItem[]>([]);
+const countItemsRef = ref<number | undefined>(undefined);
 const pages = ref<number[]>([]);
 
 const getDropdownItems = computed((): DropdownItem[] => {
@@ -89,8 +89,8 @@ const showLastPage = computed(() => {
   return isMiddleRange.value || isStartRange.value;
 });
 
-const selectLimit = (countItem: DropdownItem[]) => {
-  emit("onChangeLimit", countItem[0]?.value);
+const selectLimit = (countItem: number) => {
+  emit("onChangeLimit", countItem);
 };
 
 const setPages = () => {
@@ -108,7 +108,7 @@ watch(
 );
 
 onMounted(() => {
-  countItemsRef.value = [getDropdownItems.value?.filter((el) => el.value == props.limit)[0]];
+  countItemsRef.value = +getDropdownItems.value?.filter((el) => el.value == props.limit)[0].id;
   setPages();
 });
 </script>

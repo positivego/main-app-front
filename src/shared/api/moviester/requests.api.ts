@@ -1,6 +1,6 @@
 import { getFormDataByObj } from "@/shared/utils/general.utils";
 import { API } from "../instances";
-import type { MoviesterMovieData } from "./dto";
+import type { MoviesterMovie, MoviesterMovieCreateDto, MoviesterMovieData } from "./dto";
 import type {
   ActorsPaginationData,
   ActorsQueryParams,
@@ -17,6 +17,13 @@ export const moviesterApi = {
   movies: {
     getData: async (): Promise<MoviesterMovieData> => {
       return API.get("/moviester/movies/data").then((res) => res?.data);
+    },
+
+    create: async (data: MoviesterMovieCreateDto): Promise<MoviesterMovie> => {
+      const movieData = getFormDataByObj({ data: data.data, images: data.images });
+      return API.post("/moviester/movies", movieData, { headers: { "Content-Type": "multipart/formdata" } }).then(
+        (res) => res?.data
+      );
     },
   },
 

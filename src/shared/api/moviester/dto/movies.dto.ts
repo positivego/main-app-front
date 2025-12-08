@@ -6,13 +6,15 @@ import type { MoviesterGenre } from "./genres.dto";
 import type { MoviesterMovieType } from "./movie-type.dto";
 
 export interface MoviesterMovieImages {
-  poster: File | string;
+  poster: (File | string)[];
   images: (File | string)[];
 }
 
 export interface MoviesterMovie {
   id?: number;
   name: MoviesterEntityName;
+  slug: string;
+  description: string;
   releseDate: string;
   releseYaer: number;
   countryId: number;
@@ -27,14 +29,15 @@ export interface MoviesterMovie {
 export interface MoviesterMovieCreateDto {
   data: {
     name: MoviesterEntityName;
+    description: string;
     genresIds: number[];
     actorsIds: number[];
     releseDate: string;
-    releseYaer: number | null;
-    countryId: number | null;
-    directorId: number | null;
-    timeCount: number | null;
-    typeId: number | null;
+    releseYaer: string;
+    countryId: number | undefined;
+    directorId: number | undefined;
+    timeCount: string;
+    typeId: number | undefined;
   };
   images: {
     poster: (File | string)[];

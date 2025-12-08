@@ -69,7 +69,7 @@ const updateValue = (event: any) => {
   textarea {
     position: relative;
     width: calc(100% - 15px);
-    height: 30px;
+    height: 40px;
     color: #c6c6c6;
     border: 1px solid $border-color;
     outline: none;
@@ -93,6 +93,10 @@ const updateValue = (event: any) => {
   }
 
   .textarea {
+    textarea {
+      padding-top: 7px;
+      min-height: 100px;
+    }
   }
 
   .counter {
